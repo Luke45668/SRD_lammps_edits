@@ -2591,22 +2591,29 @@ void FixSRD::parameterize()
   double *rmass = atom->rmass;
   double *mass = atom->mass;
   int *type = atom->type;
+  
 
   int flag = 0;
-  mass_srd = 0.0;
+  mass_srd = 1.0;
+  double mass_pol=5 * mass_srd;
 
+// I think this looks through the types of atom and checks if they fit 
   for (int i = 0; i < nlocal; i++)
     if (mask[i] & groupbit) {
       if (rmass) {
         if (mass_srd == 0.0)
           mass_srd = rmass[i];
-        else if (rmass[i] != mass_srd)
-          flag = 1;
+        else if (rmass[i] == mass_pol)
+          flag = 0;
+        // else if (rmass[i] != mass_srd)
+        //   flag = 1;
       } else {
         if (mass_srd == 0.0)
           mass_srd = mass[type[i]];
-        else if (mass[type[i]] != mass_srd)
-          flag = 1;
+        // else if (mass[type[i]] != mass_srd)
+        //   flag = 1;
+        else if (mass[type[i]] == mass_pol)
+          flag = 0;
       }
     }
 
